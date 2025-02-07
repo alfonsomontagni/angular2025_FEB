@@ -1,0 +1,26 @@
+<div class="containero">
+    <h2>RootNws (con Signals)</h2>
+    <p>Contatore: {{ count() }}</p>
+    <br>
+    <button class="btno"  (click)="increment()">Incrementa</button>
+</div>
+
+
+<app-tabbar-nws 
+[items]="countries()"
+labelField="label"
+[(selectedItem)]="activeCountry"
+/>
+@if(activeCountry(); as country) {
+    <app-tabbar-nws
+      [items]="country.cities"
+      labelField="name"
+      [(selectedItem)]="activeCity"
+    />
+  }
+
+  @if (activeCity()) {
+    <p class="border border-slate-300 p-3 my-3">
+      {{ activeCity()?.desc }}
+    </p>
+  }
