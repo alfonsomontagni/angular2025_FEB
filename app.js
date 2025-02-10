@@ -29,6 +29,13 @@ const createWindow = () => {
   );
 
   mainWindow.webContents.openDevTools();
+  mainWindow.webContents.on("console-message", (event, level, message) => {
+    if (message.includes("Autofill.enable") || message.includes("Autofill.setAddresses")) {
+      return;
+    }
+    console.log(`[${level}] ${message}`);
+  });
+  
 };
 
 app.whenReady().then(() => {
