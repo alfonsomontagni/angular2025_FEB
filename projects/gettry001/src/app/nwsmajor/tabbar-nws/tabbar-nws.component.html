@@ -1,0 +1,9 @@
+@for (item of items(); track item.id) {
+    <button
+      class="btn"
+      [class.btn-info]="item.id === selectedItem()?.id"
+      (click)="selectedItem.set(item)"
+    >
+      {{ item[labelField()] }}
+    </button>
+  }
