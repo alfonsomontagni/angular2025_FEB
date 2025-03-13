@@ -7,7 +7,7 @@ import { UserListSqlComponent } from './components/user-list-sql/user-list-sql.c
   selector: 'app-root',
   imports: [RouterOutlet,RouterModule,
     UserListPvcComponent,
-    UserListSqlComponent
+   //qui UserListSqlComponent
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
