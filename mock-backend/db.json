@@ -1,0 +1,7 @@
+{
+    "books": [
+      { "id": 1, "title": "Il segreto di Angular", "author": "Alfonso Montagni" },
+      { "id": 2, "title": "RxJS con stile", "author": "Mario Rossi" }
+    ]
+  }
+  
