@@ -1,0 +1,27 @@
+<form class="flex flex-col gap-4">
+      <div class="flex gap-4 flex-wrap">
+        <div class="flex-1">
+
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label>Text Field</mat-label>
+        <input matInput type="text" [required]="false" placeholder="Enter text" />
+      </mat-form-field>
+            </div>
+      </div>
+      <div class="flex gap-4 flex-wrap">
+        <div class="flex-1">
+
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label>ISBN</mat-label><textarea
+  matInput
+  cdkTextareaAutosize
+  #autosize="cdkTextareaAutosize"
+  placeholder="Enter ISBN"
+  [cdkAutosizeMinRows]="3"
+  [cdkAutosizeMaxRows]="150"
+></textarea>
+
+      </mat-form-field>
+            </div>
+      </div>
+    </form>
