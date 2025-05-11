@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { SearchIsbnComponent } from './components/search-isbn/search-isbn.component';
+//import { SearchBookComponent } from './components/search-book/search-book.component';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
+  imports: [SearchIsbnComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
