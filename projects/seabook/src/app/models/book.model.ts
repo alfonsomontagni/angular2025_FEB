@@ -8,6 +8,7 @@ export interface Book {
   description?: string;
   pageCount?: number;
   language?: string;
+  categories?: string,
   previewLink?: string;
   found: boolean;
   error?: boolean;

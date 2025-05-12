@@ -36,6 +36,7 @@ export class SearchBooksService {
           description: info.description,
           pageCount: info.pageCount,
           language: info.language,
+          categories: info.categories,
           previewLink: info.previewLink || null,
           found: true,
           searchDate: new Date().toISOString(),

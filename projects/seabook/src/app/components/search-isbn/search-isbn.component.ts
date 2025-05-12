@@ -36,7 +36,7 @@ export class SearchIsbnComponent {
     this.errorMessage.set(null);
     this.isLoading.set(true);
     this.books.set([]);
-this.hasSearched.set(true);
+    this.hasSearched.set(true);
 
     this.searchService.searchBooksByIsbnList(isbns).subscribe({
       next: (results) => {
@@ -116,5 +116,11 @@ this.hasSearched.set(true);
     a.click();
 
     URL.revokeObjectURL(url);
+  }
+
+  expandAll = signal(false);
+
+  toggleAllDescriptions() {
+    this.expandAll.set(!this.expandAll());
   }
 }

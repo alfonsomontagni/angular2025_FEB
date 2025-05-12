@@ -139,19 +139,32 @@
       <span id="errorToastMessage">Errore durante l'operazione.</span>
     </div>
   </div>
-
+      
 
   @if (errorMessage()) {
   <div class="mt-4 text-red-600">{{ errorMessage() }}</div>
 }
+
 @if (books().length > 0) {
+
+
   <p class="mt-4 px-6 md:px-12 text-gray-600">
     {{ foundCount() }} di {{ books().length }} trovati
+
   </p>
+<div class="mt-2 px-6 md:px-12">
+  <button (click)="toggleAllDescriptions()"
+        class="bg-indigo-100 hover:bg-indigo-600 text-black hover:text-white text-sm py-2 px-4 rounded shadow">
+    {{ expandAll() ? 'Comprimi descrizioni' : 'Espandi tutte le descrizioni' }}
+  </button>
+</div>
+
+
+ 
   <ul class="mt-4 space-y-4 px-6 md:px-12">
 
     @for (book of books(); track book.isbn) {
-      <app-search-result [book]="book" />
+     <app-search-result [book]="book" [expandDescription]="expandAll()" />
     }
   </ul>
 } @else if (!isLoading() && !errorMessage()) {
