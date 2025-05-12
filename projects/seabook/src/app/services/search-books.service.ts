@@ -3,17 +3,17 @@ import { HttpClient } from '@angular/common/http';
 import { Book } from '../models/book.model';
 import { Observable, of, combineLatest } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
+import { apikey } from '../utils/utils-api';
 
 @Injectable({ providedIn: 'root' })
 export class SearchBooksService {
   private http = inject(HttpClient);
-
   fetchBookByISBN(isbn: string): Observable<Book> {
     const cleanIsbn = isbn.replace(/[-\s]/g, '');
-    const url = `https://www.googleapis.com/books/v1/volumes?q=isbn:${cleanIsbn}`;
+    const url = `https://www.googleapis.com/books/v1/volumes?q=isbn:${cleanIsbn}&key=${apikey}`;
 
     return this.http.get<any>(url).pipe(
-      map(data => {
+      map((data) => {
         if (!data.items?.length) {
           return {
             isbn: cleanIsbn,
@@ -22,7 +22,7 @@ export class SearchBooksService {
             publisher: 'N/A',
             publishedDate: 'N/A',
             coverImage: null,
-            found: false
+            found: false,
           };
         }
         const info = data.items[0].volumeInfo;
@@ -33,25 +33,30 @@ export class SearchBooksService {
           publisher: info.publisher || 'Editore sconosciuto',
           publishedDate: info.publishedDate || 'Data sconosciuta',
           coverImage: info.imageLinks?.thumbnail || null,
+          description: info.description,
+          pageCount: info.pageCount,
+          language: info.language,
           previewLink: info.previewLink || null,
           found: true,
-          searchDate: new Date().toISOString()
+          searchDate: new Date().toISOString(),
         };
       }),
-      catchError(() => of({
-        isbn: cleanIsbn,
-        title: 'Errore nella ricerca',
-        authors: 'N/A',
-        publisher: 'N/A',
-        publishedDate: 'N/A',
-        coverImage: null,
-        found: false,
-        error: true
-      }))
+      catchError(() =>
+        of({
+          isbn: cleanIsbn,
+          title: 'Errore nella ricerca',
+          authors: 'N/A',
+          publisher: 'N/A',
+          publishedDate: 'N/A',
+          coverImage: null,
+          found: false,
+          error: true,
+        })
+      )
     );
   }
 
   searchBooksByIsbnList(isbns: string[]): Observable<Book[]> {
-    return combineLatest(isbns.map(isbn => this.fetchBookByISBN(isbn)));
+    return combineLatest(isbns.map((isbn) => this.fetchBookByISBN(isbn)));
   }
 }
