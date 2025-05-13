@@ -123,4 +123,70 @@ export class SearchIsbnComponent {
   toggleAllDescriptions() {
     this.expandAll.set(!this.expandAll());
   }
+/*
+  saveToDb(): void {
+    const booksToSave = this.books()
+      .filter((book) => book.isbn && book.isbn.trim() !== '')
+      .map((book) => ({
+        ...book,
+        // converto se array, altrimenti lascio com'è
+        authors: Array.isArray(book.authors)
+          ? book.authors.join(', ')
+          : book.authors,
+        categories: Array.isArray(book.categories)
+          ? book.categories.join(', ')
+          : book.categories,
+      }));
+
+    //booksToSave.forEach(book=>console.log(book))
+    console.log(booksToSave);
+
+    this.searchService.saveBooksToDb(booksToSave).subscribe({
+      next: () =>
+        this.successMessage.set('Salvataggio completato con successo.'),
+      error: (err) =>
+        this.errorMessage.set('Errore durante il salvataggio: ' + err.message),
+    });
+  }
+*/
+
+saveToDb(): void {
+  if (!this.selectedLocation()) {
+    this.errorMessage.set('Seleziona una posizione valida');
+    return;
+  }
+
+  const booksToSave = this.books()
+    .filter(book => book.isbn && book.isbn.trim() !== '')
+    .map(book => ({
+      ...book,
+      authors: Array.isArray(book.authors) ? book.authors.join(', ') : book.authors,
+      categories: Array.isArray(book.categories) ? book.categories.join(', ') : book.categories,
+      mylocation: this.selectedLocation()
+    }));
+
+  this.searchService.saveBooksToDb(booksToSave).subscribe({
+    next: () => this.successMessage.set('Salvataggio completato con successo.'),
+    error: err => this.errorMessage.set('Errore durante il salvataggio: ' + err.message)
+  });
+}
+
+locationsAZ = [
+  'A1', 'A2', 'A3', 'A4', 'A5', 'A6', 'A7',
+  'A01', 'A02', 'A03', 'A04', 'A05', 'A06', 'A07',
+  'B01', 'B02', 'B03', 'B04', 'B05', 'B06', 'B07',
+  'C01', 'C02', 'C03', 'C04', 'C05', 'C06', 'C07',
+  'D01', 'D02', 'D03', 'D04', 'D05', 'D06', 'D07',
+  'E01', 'E02', 'E03', 'E04', 'E05', 'E06', 'E07',
+  'F01', 'F02', 'F03', 'F04', 'F05', 'F06', 'F07',
+  'G01', 'G02', 'G03', 'G04', 'G05', 'G06', 'G07',
+  'H01', 'H02', 'H03', 'H04', 'H05', 'H06', 'H07',
+  'I01', 'I02', 'I03', 'I04', 'I05', 'I06', 'I07',
+  'J01', 'J02', 'J03', 'J04', 'J05', 'J06', 'J07',
+  'K01', 'K02', 'K03', 'K04', 'K05', 'K06', 'K07',
+];
+
+  locationsX = ['X01', 'X02', 'X03', 'X04', 'X05', 'X06', 'X07'];
+
+  selectedLocation = signal('');
 }

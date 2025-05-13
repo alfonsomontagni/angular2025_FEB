@@ -33,6 +33,13 @@ import { Book } from '../../../models/book.model';
         <p *ngIf="book.previewLink" class="mt-1">
           <a [href]="book.previewLink" target="_blank" class="text-blue-600 hover:underline">Anteprima</a>
         </p>
+        <div class="mt-2">
+  <p class="text-sm text-gray-500">
+    <strong>Posizione:</strong>
+    <span class="text-gray-700">{{ book.mylocation || 'Non assegnata' }}</span>
+  </p>
+</div>
+
       </div>
 
       <!-- Descrizione -->

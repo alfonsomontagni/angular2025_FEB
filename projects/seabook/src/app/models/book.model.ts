@@ -13,4 +13,14 @@ export interface Book {
   found: boolean;
   error?: boolean;
   searchDate?: string;
+  mylocation?: string;
+
+}
+
+export interface BookPage {
+  content: Book[];
+  totalElements: number;
+  totalPages: number;
+  size: number;
+  number: number;
 }

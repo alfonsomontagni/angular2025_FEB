@@ -60,4 +60,9 @@ export class SearchBooksService {
   searchBooksByIsbnList(isbns: string[]): Observable<Book[]> {
     return combineLatest(isbns.map((isbn) => this.fetchBookByISBN(isbn)));
   }
+
+  saveBooksToDb(books: Book[]): Observable<any> {
+  return this.http.post('http://localhost:8080/api/books', books); // Adatta l'URL al controller Spring
+}
+
 }
