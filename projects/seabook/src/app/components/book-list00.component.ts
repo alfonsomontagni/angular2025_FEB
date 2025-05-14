@@ -6,7 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { EditBookModalComponent } from './edit-book-modal.component';
 
 @Component({
-  selector: 'app-book-list',
+  selector: 'app-book-list00',
   standalone: true,
   imports: [CommonModule, FormsModule,EditBookModalComponent],
   template: `
@@ -95,12 +95,7 @@ import { EditBookModalComponent } from './edit-book-modal.component';
       <div *ngIf="books.length > 0" class="bg-white rounded-lg shadow-md">
         <ul class="divide-y divide-gray-200">
           <li *ngFor="let book of books" class="p-4 flex items-center">
-            <img *ngIf="book.coverImage" 
-            [src]="getCoverSrc(book)"
-            (error)="onImgError($event, book)"
-            alt="Copertina" 
-            
-            class="book-cover mr-4 rounded shadow" />
+            <img *ngIf="book.coverImage" [src]="book.coverImage" alt="Copertina" class="book-cover mr-4 rounded shadow" />
             <div class="flex-grow">
               <h2 class="text-lg font-semibold text-gray-800 flex items-center gap-2">
   {{ book.title }}
@@ -119,24 +114,7 @@ import { EditBookModalComponent } from './edit-book-modal.component';
       Anteprima
     </a>
   </ng-container>
-
 </p>
-<!-- nel loop *ngFor -->
-<p>
-  <!-- spunta verde se già scaricata -->
-  <span *ngIf="downloaded().has(book.isbn)"
-        class="text-green-600 text-xl mr-1">✔︎</span>
-
-  <!-- pulsante scarica -->
-  <button *ngIf="book.coverImage"
-          (click)="downloadCover(book)"
-          [disabled]="downloaded().has(book.isbn)"
-          class="bg-purple-600 hover:bg-purple-700 disabled:bg-gray-400
-                 text-white text-xs px-2 py-1 rounded">
-    ⬇️ Scarica copertina
-  </button>
-</p>
-
 <p class="text-sm text-gray-400">
   Ultima modifica: 
   {{ book.updatedAt ? (book.updatedAt | date:'dd/MM/yyyy HH:mm') : 'N/A' }}
@@ -194,7 +172,7 @@ import { EditBookModalComponent } from './edit-book-modal.component';
     }
   `]
 })
-export class BookListComponent {
+export class BookList00Component {
   books: Book[] = [];
   isLoading = false;
   pageSize = signal(10);
@@ -351,79 +329,6 @@ private downloadTextFile(content: string, filename: string): void {
   window.URL.revokeObjectURL(url);
 }*/
  fileNamePrefix = signal('Lista');
-//  ────────────────────────────────────────────────────────────
-downloaded = signal<Set<string>>(new Set<string>());   //  ⬅️ nuovo stato
-//  ────────────────────────────────────────────────────────────
-
-// inside BookListComponent
-/* libro-copertina.component.ts (o dentro BookListComponent) */
-
-async downloadCover(book: Book): Promise<void> {
-  if (!book.coverImage) { return; }
-
-  try {
-    /* 1. fetch (servirà la cache del browser) */
-   // const response = await fetch(book.coverImage, { mode: 'cors' });
-    const response = await fetch(this.proxiedUrl(book));   // nessun CORS
-
-    if (!response.ok) { throw new Error(`${response.status}`); }
-
-    /* 2. Bytes -> Blob */
-    const blob = await response.blob();
-
-    /* 3. Object‑URL + download invisibile */
-    const url  = URL.createObjectURL(blob);
-    const a    = document.createElement('a');
-    a.href      = url;
-    a.download  = `${book.isbn}.jpg`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);     // 4. cleanup
-
-    /* ✔︎ segna come scaricato */
-    this.downloaded.update(s => new Set(s).add(book.isbn));
-
-  } catch (err) {
-    console.error('Download copertina fallito:', err);
-    alert('Impossibile scaricare la copertina; prova di nuovo o verifica il link.');
-  }
-}
-
-
-/*
-private proxiedUrl(book: Book) {
-  const encoded = encodeURIComponent(book.coverImage!);
-  return `http://localhost:8080/api/covers/${book.isbn}?url=${encoded}`;
-}*/
-/* ------------------------------------------------------------------
- *  Restituisce il path da mostrare <img>.
- * ------------------------------------------------------------------*/
-getCoverSrc(book: Book): string {
-
-  return `covers/${book.isbn}.jpg`;
-
-}
-
-/* quando il browser restituisce 404 */
-onImgError(ev: Event, book: Book): void {
-  /* <img> che ha fallito il caricamento */
-  const img = ev.target as HTMLImageElement;
-
-  /* se abbiamo il link remoto, lo imposto */
-  if (book.coverImage) {
-    img.src = book.coverImage;      // => ora carica da Internet
-  } else {
-    /* opzionale: placeholder generico */
-    img.src = 'assets/placeholder-cover.svg';
-  }
-}
-
-/* Già presente in fondo al componente – spostalo sopra se vuoi */
-private proxiedUrl(book: Book): string {
-  const encoded = encodeURIComponent(book.coverImage!);
-  return `http://localhost:8080/api/covers/${book.isbn}?url=${encoded}`;
-}
 
   deleteBook(isbn: string): void {
     // TODO: chiamata al BE per eliminazione libro se prevista

@@ -22,6 +22,18 @@ import { RouterModule } from '@angular/router';
               Leggi
             </a>
           </li>
+          <li>
+            <a routerLink="books/list00" routerLinkActive="text-yellow-400"
+               class="text-white hover:text-yellow-400 transition font-medium">
+             old Leggi00
+            </a>
+          </li>
+          <li>
+            <a routerLink="books/local" routerLinkActive="text-yellow-400"
+               class="text-white hover:text-yellow-400 transition font-medium">
+              Local
+            </a>
+          </li>
         </ul>
       </div>
     </nav>

@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { BookPage } from '../models/book.model';
+import { Book, BookPage } from '../models/book.model';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -42,5 +42,8 @@ export class PageBookService {
 
     return this.http.get<BookPage>(this.apiUrl, { params });
   }
+updateBook(book: Book): Observable<void> {
+  return this.http.put<void>(`${this.apiUrl}/${book.isbn}`, book);
+}
 
 }

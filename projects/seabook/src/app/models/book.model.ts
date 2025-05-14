@@ -14,6 +14,7 @@ export interface Book {
   error?: boolean;
   searchDate?: string;
   mylocation?: string;
+  updatedAt?: Date;
 
 }
 
