@@ -15,6 +15,8 @@ export interface Book {
   searchDate?: string;
   mylocation?: string;
   updatedAt?: Date;
+  only_pdf?: boolean;
+  with_pdf?: boolean;
 
 }
 

@@ -25,6 +25,27 @@ import { PageBookService } from '../services/page-book.service';
           [required]="!field.optional"
         />
       </div>
+<!-- blocco PDF ----------------------------------------------------- -->
+<div class="col-span-1 md:col-span-2 xl:col-span-3 flex gap-6">
+  <!-- solo PDF -->
+  <label class="inline-flex items-center gap-2 cursor-pointer">
+    <input type="checkbox"
+           class="h-4 w-4 text-red-600 accent-red-600"
+           [checked]="onlyPdfSignal()"
+           (change)="toggleOnlyPdf($event)">
+    <span class="text-sm">Solo PDF</span>
+  </label>
+
+  <!-- con PDF -->
+  <label class="inline-flex items-center gap-2 cursor-pointer">
+    <input type="checkbox"
+           class="h-4 w-4 text-blue-600 accent-blue-600"
+           [checked]="withPdfSignal()"
+           (change)="toggleWithPdf($event)">
+    <span class="text-sm">Con PDF</span>
+  </label>
+</div>
+<!-- --------------------------------------------------------------- -->
 
       <!-- Pulsanti in fondo -->
       <div class="col-span-1 md:col-span-2 xl:col-span-3 flex justify-end gap-3 mt-6">
@@ -45,11 +66,18 @@ import { PageBookService } from '../services/page-book.service';
   `
 })
 export class EditBookModalComponent {
-  @Input() set book(value: Book) {
+  /*@Input() set book(value: Book) {
       if (value) {
     this.editableBook.set({ ...value });
       }
+  }*/
+@Input() set book(value: Book) {
+  if (value) {
+    this.editableBook.set({ ...value });
+    this.onlyPdfSignal.set(!!value.only_pdf);
+    this.withPdfSignal.set(!!value.with_pdf);
   }
+}
 
  //@Output() updated = new EventEmitter<Book>();
  // @Output() cancelled = new EventEmitter<void>();
@@ -67,8 +95,12 @@ export class EditBookModalComponent {
     { key: 'language', label: 'Lingua' },
     { key: 'categories', label: 'Categorie' },
     { key: 'previewLink', label: 'Link Amazon' },
-    { key: 'mylocation', label: 'Posizione' }
+    { key: 'mylocation', label: 'Posizione' },
+  //    { key: 'only_pdf', label: 'Solo _pdf' },
+ // { key: 'with_pdf', label: 'Ha _pdf' }
   ];
+onlyPdfSignal   = signal(false);
+withPdfSignal   = signal(false);
 
   updateField(key: keyof Book, value: any): void {
     this.editableBook.update(book => ({ ...book, [key]: value }));
@@ -76,6 +108,7 @@ export class EditBookModalComponent {
 
   save(): void {
     //this.updated.emit(this.editableBook());
+
      this.submit();
   }
 
@@ -88,7 +121,13 @@ export class EditBookModalComponent {
 
 pageBookService=inject(PageBookService)
 submit(): void {
-  const bookToUpdate = { ...this.editableBook(), found: true }; // forza found = true
+ // const bookToUpdate = { ...this.editableBook(), found: true }; // forza found = true
+       const bookToUpdate: Book = {
+        ...this.editableBook(),
+        found: true,
+        only_pdf: this.onlyPdfSignal(),
+        with_pdf: this.withPdfSignal()
+      };
   this.pageBookService.updateBook(bookToUpdate).subscribe({
     next: () => {
       this.saved.emit();
@@ -97,4 +136,17 @@ submit(): void {
     error: err => console.error('Errore aggiornamento:', err)
   });
 }
+
+toggleOnlyPdf(ev: Event) {
+  const checked = (ev.target as HTMLInputElement).checked;
+  this.onlyPdfSignal.set(checked);
+  if (checked) { this.withPdfSignal.set(false); }   // non possiamo avere entrambe
+}
+
+toggleWithPdf(ev: Event) {
+  const checked = (ev.target as HTMLInputElement).checked;
+  this.withPdfSignal.set(checked);
+  if (checked) { this.onlyPdfSignal.set(false); }
+}
+
 }

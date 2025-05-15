@@ -17,9 +17,27 @@ import { RouterModule } from '@angular/router';
             </a>
           </li>
           <li>
+            <a routerLink="poc01" routerLinkActive="text-yellow-400"
+               class="text-white hover:text-yellow-400 transition font-medium">
+              POC 01
+            </a>
+          </li>
+          <li>
             <a routerLink="books/list" routerLinkActive="text-yellow-400"
                class="text-white hover:text-yellow-400 transition font-medium">
               Leggi
+            </a>
+          </li>
+          <li>
+            <a routerLink="books/list01" routerLinkActive="text-yellow-400"
+               class="text-white hover:text-yellow-400 transition font-medium">
+             Leggi01
+            </a>
+          </li>
+          <li>
+            <a routerLink="books/list02" routerLinkActive="text-yellow-400"
+               class="text-white hover:text-yellow-400 transition font-medium">
+             Leggi02
             </a>
           </li>
           <li>
