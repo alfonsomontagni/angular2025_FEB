@@ -137,6 +137,20 @@
     <!-- Modifica dell'area "Salvataggio Database" -->
 <div class="mt-6 border-t pt-4 border-gray-200">
   <h3 class="text-sm font-semibold text-gray-700 mb-3">Salvataggio Database</h3>
+
+  <div class="flex items-center gap-2 mt-4">
+  <!-- 👉 nuovo toggle -->
+  <input
+    id="onlyPdfToggle"
+    type="checkbox"
+    class="h-4 w-4 text-purple-600 border-gray-300 rounded"
+    [ngModel]="onlyPdf()"
+    (ngModelChange)="onlyPdf.set($event)" />
+
+  <label for="onlyPdfToggle" class="text-sm select-none">
+    Salva tutti come <strong>Solo PDF</strong>
+  </label>
+</div>
   <div class="flex flex-col sm:flex-row items-center gap-3">
 
     <select
@@ -152,7 +166,7 @@
       </optgroup>
     </select>
 
-    <button
+    <!-- button
       id="saveToDbButton"
       (click)="saveToDb()"
       [disabled]="!hasSearched() || !selectedLocation()"
@@ -162,7 +176,14 @@
               d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
       </svg>
       Salva su DB
-    </button>
+    </button -->
+    <button
+     id="saveToDbButton"
+  class="mt-3 bg-green-600 hover:bg-green-700 text-white font-medium px-4 py-2 rounded  disabled:opacity-50 disabled:cursor-not-allowed"
+  [disabled]="!hasSearched() || !selectedLocation()"
+  (click)="saveToDb()">
+  💾 Salva su DB
+</button>
   </div>
   <p class="mt-1 text-xs text-gray-500">Assicurati che il server sia in esecuzione all'indirizzo specificato</p>
 </div>

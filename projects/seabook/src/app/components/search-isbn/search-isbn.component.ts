@@ -150,26 +150,7 @@ export class SearchIsbnComponent {
   }
 */
 
-saveToDb(): void {
-  if (!this.selectedLocation()) {
-    this.errorMessage.set('Seleziona una posizione valida');
-    return;
-  }
 
-  const booksToSave = this.books()
-    .filter(book => book.isbn && book.isbn.trim() !== '')
-    .map(book => ({
-      ...book,
-      authors: Array.isArray(book.authors) ? book.authors.join(', ') : book.authors,
-      categories: Array.isArray(book.categories) ? book.categories.join(', ') : book.categories,
-      mylocation: this.selectedLocation()
-    }));
-
-  this.searchService.saveBooksToDb(booksToSave).subscribe({
-    next: () => this.successMessage.set('Salvataggio completato con successo.'),
-    error: err => this.errorMessage.set('Errore durante il salvataggio: ' + err.message)
-  });
-}
 
 locationsAZ = [
   'A1', 'A2', 'A3', 'A4', 'A5', 'A6', 'A7',
@@ -189,4 +170,33 @@ locationsAZ = [
   locationsX = ['X01', 'X02', 'X03', 'X04', 'X05', 'X06', 'X07'];
 
   selectedLocation = signal('');
+
+    onlyPdf = signal(false);  
+
+    
+
+  saveToDb(): void {
+        const flag = this.onlyPdf();
+
+  if (!this.selectedLocation()) {
+    this.errorMessage.set('Seleziona una posizione valida');
+    return;
+  }
+
+  const booksToSave = this.books()
+    .filter(book => book.isbn && book.isbn.trim() !== '')
+    .map(book => ({
+      ...book,
+      authors: Array.isArray(book.authors) ? book.authors.join(', ') : book.authors,
+      categories: Array.isArray(book.categories) ? book.categories.join(', ') : book.categories,
+      mylocation: this.selectedLocation(),
+      only_pdf: flag,
+      with_pdf: false 
+    }));
+
+  this.searchService.saveBooksToDb(booksToSave).subscribe({
+    next: () => this.successMessage.set('Salvataggio completato con successo.'),
+    error: err => this.errorMessage.set('Errore durante il salvataggio: ' + err.message)
+  });
+}
 }
