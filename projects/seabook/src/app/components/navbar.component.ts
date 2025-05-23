@@ -24,6 +24,14 @@ import { ExportService } from '../services/export.service';
               Leggi
             </a>
           </li>
+          
+
+          <li>
+            <a routerLink="books/ref/list" routerLinkActive="text-yellow-400"
+               class="text-white hover:text-yellow-400 transition font-medium">
+              REF Leggi
+            </a>
+          </li>
 <!-- 
                     <li>
             <a routerLink="poc01" routerLinkActive="text-yellow-400"

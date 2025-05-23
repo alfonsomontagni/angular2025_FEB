@@ -1,1 +1,38 @@
-<p>ref-book-list works!</p>
+<div class="container mx-auto px-4 py-8 max-w-5xl">
+  <h1 class="text-3xl font-bold text-gray-800 mb-6">Lista libri</h1>
+
+  <!-- ① Filtri -->
+  <app-ref-book-filters></app-ref-book-filters>
+
+  <!-- ② Toolbar download / azioni -->
+  <app-ref-book-toolbar
+      [books]="books()"
+      (downloadIsbn)="onDownloadIsbn()"
+      (downloadTitles)="onDownloadTitles()">
+  </app-ref-book-toolbar>
+
+  <!-- ③ Lista libri -->
+  <ng-container *ngIf="books().length; else empty">
+    <app-ref-book-card
+        *ngFor="let book of books()"
+        [book]="book"
+        [coverDownloaded]="downloaded().has(book.isbn)"
+        (downloadCover)="onDownloadCover($event)"
+        (edit)="openEdit($event)"
+        (delete)="delete($event)">
+    </app-ref-book-card>
+  </ng-container>
+
+  <ng-template #empty>
+    <p class="text-center text-gray-500 mt-12">Nessun libro trovato.</p>
+  </ng-template>
+</div>
+
+<!-- ✨ Modale  -->
+<app-ref-edit-book-modal
+    *ngIf="editing"
+    [book]="editing"
+  
+    (close)="editing = null"
+    (saved)="reload()">
+</app-ref-edit-book-modal> >

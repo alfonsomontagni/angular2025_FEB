@@ -5,13 +5,20 @@
              (error)="onImgError($event)"
              alt="Copertina"
              class="book-cover rounded shadow" />
-        <div *ngIf="book.only_pdf || book.with_pdf"
+        <!-- div *ngIf="book.only_pdf || book.with_pdf"
              class="mt-2 text-xs font-semibold px-2 py-1 rounded border"
              [ngClass]="{
                 'border-2 border-red-500 text-red-600': book.only_pdf,
                 'border-2 border-blue-500 text-blue-600': !book.only_pdf && book.with_pdf
              }">
           {{ book.only_pdf ? 'PDF' : 'Con PDF' }}
+        </div-->
+        <div  class="mt-2">
+
+          <app-ref-pdf-badge
+            [only]="!!book.only_pdf"
+            [with]="!!book.with_pdf">
+        </app-ref-pdf-badge>
         </div>
       </div>
 

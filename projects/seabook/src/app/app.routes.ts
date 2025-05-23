@@ -6,6 +6,7 @@ import { BookList00Component } from './components/book-list00.component';
 import { BookList01Component } from './components/book-list01.component';
 import { Poc01Component } from './components/poc/poc01.component';
 import { BookList02Component } from './components/book-list02.component';
+import { RefBookListComponent } from './refactor/components/ref-book-list/ref-book-list.component';
 
 export const routes: Routes = [
   { path: 'books/add', component: SearchIsbnComponent },
@@ -15,5 +16,6 @@ export const routes: Routes = [
   { path: 'books/list02', component: BookList02Component },
   { path: 'books/local', component: BookLocalComponent },
   { path: 'poc01', component: Poc01Component },
+  { path: 'books/ref/list', component: RefBookListComponent },
  // { path: '', redirectTo: 'books/list', pathMatch: 'full' }
 ];

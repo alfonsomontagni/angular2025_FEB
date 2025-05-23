@@ -1,1 +1,59 @@
-<p>ref-book-filters works!</p>
+<div class="flex flex-wrap gap-3 mb-6 items-center">
+      <!-- Page size -->
+      <select class="border border-gray-300 rounded-md px-3 py-2 text-sm"
+              [ngModel]="state().pageSize"
+              (ngModelChange)="update({ pageSize: $event })">
+        <option [value]="10">10</option>
+        <option [value]="50">50</option>
+        <option [value]="100">100</option>
+        <option [value]="999">Tutti</option>
+      </select>
+
+      <!-- Language -->
+      <input type="text" placeholder="Filtra per lingua"
+             class="border border-gray-300 rounded-md px-3 py-2 text-sm"
+             [ngModel]="state().language"
+             (ngModelChange)="update({ language: $event })" />
+
+      <!-- Location -->
+      <input type="text" placeholder="Filtra per posizione"
+             class="border border-gray-300 rounded-md px-3 py-2 text-sm"
+             [ngModel]="state().mylocation"
+             (ngModelChange)="update({ mylocation: $event })" />
+
+      <!-- Title -->
+      <input type="text" placeholder="Filtra per titolo"
+             class="border border-gray-300 rounded-md px-3 py-2 text-sm"
+             [ngModel]="state().title"
+             (ngModelChange)="update({ title: $event })" />
+
+      <!-- Authors -->
+      <input type="text" placeholder="Filtra per autore"
+             class="border border-gray-300 rounded-md px-3 py-2 text-sm"
+             [ngModel]="state().authors"
+             (ngModelChange)="update({ authors: $event })" />
+
+      <!-- Found toggle -->
+      <button (click)="toggleFound()"
+              class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition-colors">
+        {{ state().found ? 'Solo trovati' : 'Solo non trovati' }}
+      </button>
+
+      <!-- Updated toggle -->
+      <button (click)="toggleUpdated()"
+              class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition-colors">
+        {{ state().updated === true ? 'Solo aggiornati' : state().updated === false ? 'Solo non aggiornati' : 'Tutti' }}
+      </button>
+
+      <!-- PDF filter toggle -->
+      <button (click)="togglePdfFilter()"
+              class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-md transition-colors">
+        {{ state().pdf === 'ALL' ? 'Libri e PDF' : state().pdf === 'ONLY' ? 'Solo PDF' : 'Con PDF' }}
+      </button>
+
+      <!-- Reset -->
+      <button (click)="reset()"
+              class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium py-2 px-4 rounded-md transition-colors">
+        Reset filtri
+      </button>
+    </div>
