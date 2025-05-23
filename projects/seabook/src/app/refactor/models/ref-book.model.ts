@@ -1,4 +1,4 @@
-export interface Book {
+export interface RefBook {
   isbn: string;
   title: string;
   authors: string;
@@ -20,8 +20,8 @@ export interface Book {
 
 }
 
-export interface BookPage {
-  content: Book[];
+export interface RefBookPage {
+  content: RefBook[];
   totalElements: number;
   totalPages: number;
   size: number;
