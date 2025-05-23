@@ -45,3 +45,6 @@ appunti_f25.txt
 appunti.txt
 /projects/seabook/src/app/utils/utils-api.ts
 /projects/seabook/public/covers
+/projects/seabook/src/app/refactor/_*
+
+/projects/seabook/src/app/refactor/eligere*

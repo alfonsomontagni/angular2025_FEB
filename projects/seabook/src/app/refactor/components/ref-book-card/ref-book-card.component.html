@@ -1,1 +1,67 @@
-<p>ref-book-card works!</p>
+   <div class="p-4 flex items-center border-b">
+      <div class="flex flex-col items-center mr-4">
+        <img *ngIf="book.coverImage"
+             [src]="coverSrc"
+             (error)="onImgError($event)"
+             alt="Copertina"
+             class="book-cover rounded shadow" />
+        <div *ngIf="book.only_pdf || book.with_pdf"
+             class="mt-2 text-xs font-semibold px-2 py-1 rounded border"
+             [ngClass]="{
+                'border-2 border-red-500 text-red-600': book.only_pdf,
+                'border-2 border-blue-500 text-blue-600': !book.only_pdf && book.with_pdf
+             }">
+          {{ book.only_pdf ? 'PDF' : 'Con PDF' }}
+        </div>
+      </div>
+
+      <div class="flex-grow">
+        <h2 class="text-lg font-semibold text-gray-800 flex items-center gap-2">
+          {{ book.title }}
+          <span *ngIf="book.updatedAt"
+                class="bg-yellow-200 text-yellow-800 text-xs font-medium px-2 py-0.5 rounded">
+            modificato
+          </span>
+        </h2>
+        <p class="text-sm text-gray-700">ISBN: {{ book.isbn }}</p>
+        <p class="text-sm text-gray-600">{{ book.authors }}</p>
+        <p class="text-sm text-gray-500">
+          Lingua: {{ book.language }} | Posizione: {{ book.mylocation }}
+        </p>
+        <p class="text-sm text-gray-500">
+          <a *ngIf="book.previewLink"
+             [href]="book.previewLink"
+             target="_blank"
+             class="text-blue-600 underline hover:text-blue-800">
+            Anteprima
+          </a>
+        </p>
+        <p class="text-sm text-gray-400">
+          Ultima modifica:
+          {{ book.updatedAt ? (book.updatedAt | date:'dd/MM/yyyy HH:mm') : 'N/A' }}
+        </p>
+        <p class="text-sm text-gray-500">
+          <a [href]="'https://www.amazon.it/s?k=' + book.isbn"
+             target="_blank"
+             class="text-blue-600 underline hover:text-blue-800">
+            Amazon
+          </a>
+        </p>
+      </div>
+
+      <div class="flex flex-col gap-2 ml-2">
+        <button class="bg-purple-600 hover:bg-purple-700 text-white text-xs px-2 py-1 rounded disabled:bg-gray-400"
+                [disabled]="coverDownloaded"
+                (click)="downloadCover.emit(book)">
+          ⬇️ Copertina
+        </button>
+        <button class="bg-yellow-500 text-white text-xs px-2 py-1 rounded hover:bg-yellow-600"
+                (click)="edit.emit(book)">
+          Modifica
+        </button>
+        <button class="bg-red-500 text-white text-xs px-2 py-1 rounded hover:bg-red-700"
+                (click)="delete.emit(book.isbn)">
+          Elimina
+        </button>
+      </div>
+    </div>
