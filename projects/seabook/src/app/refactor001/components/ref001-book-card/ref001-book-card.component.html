@@ -1,0 +1,82 @@
+<div class="p-4 flex items-center border-b hover:bg-gray-50 transition-colors">
+  <div class="flex flex-col items-center mr-4">
+    <img 
+      *ngIf="book.coverImage || true"
+      [src]="coverSrc"
+      [appRef001ImgFallback]="'assets/placeholder-cover.svg'"
+      [fallbackUrl]="book.coverImage || undefined"
+      alt="Copertina di {{ book.title }}"
+      class="book-cover rounded shadow w-16 h-20 object-cover" 
+      loading="lazy" />
+    
+    <div class="mt-2">
+      <app-ref001-pdf-badge
+        [only]="!!book.only_pdf"
+        [with]="!!book.with_pdf">
+      </app-ref001-pdf-badge>
+    </div>
+  </div>
+
+  <div class="flex-grow">
+    <h2 class="text-lg font-semibold text-gray-800 flex items-center gap-2">
+      {{ book.title }}
+      <span *ngIf="book.updatedAt"
+            class="bg-yellow-200 text-yellow-800 text-xs font-medium px-2 py-0.5 rounded">
+        modificato
+      </span>
+    </h2>
+    
+    <div class="space-y-1 text-sm">
+      <p class="text-gray-700">ISBN: {{ book.isbn }}</p>
+      <p class="text-gray-600">{{ book.authors }}</p>
+      <p class="text-gray-500">
+        Lingua: {{ book.language || 'N/A' }} | Posizione: {{ book.mylocation || 'N/A' }}
+      </p>
+      
+      <div class="flex gap-4">
+        <a *ngIf="book.previewLink"
+           [href]="book.previewLink"
+           target="_blank"
+           rel="noopener"
+           class="text-blue-600 underline hover:text-blue-800">
+          Anteprima
+        </a>
+        
+        <a [href]="amazonSearchUrl"
+           target="_blank"
+           rel="noopener"
+           class="text-blue-600 underline hover:text-blue-800">
+          Amazon
+        </a>
+      </div>
+      
+      <p class="text-gray-400">
+        Ultima modifica: {{ book.updatedAt | refRelDatetime }}
+      </p>
+    </div>
+  </div>
+
+  <div class="flex flex-col gap-2 ml-2">
+    <button 
+      class="bg-purple-600 hover:bg-purple-700 text-white text-xs px-2 py-1 rounded disabled:bg-gray-400 transition-colors"
+      [disabled]="coverDownloaded"
+      (click)="onDownloadCover()"
+      [title]="coverDownloaded ? 'Copertina già scaricata' : 'Scarica copertina'">
+      ⬇️ Copertina
+    </button>
+    
+    <button 
+      class="bg-yellow-500 text-white text-xs px-2 py-1 rounded hover:bg-yellow-600 transition-colors"
+      (click)="edit.emit(book)"
+      title="Modifica libro">
+      ✏️ Modifica
+    </button>
+    
+    <button 
+      class="bg-red-500 text-white text-xs px-2 py-1 rounded hover:bg-red-700 transition-colors"
+      (click)="delete.emit(book.isbn)"
+      title="Elimina libro">
+      🗑️ Elimina
+    </button>
+  </div>
+</div>

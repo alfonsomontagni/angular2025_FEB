@@ -10,7 +10,7 @@ export class RefBookService {
   constructor(private readonly http: HttpClient) {}
 
   getBooks(filters: FilterState): Observable<RefBook[]> {
-    const params = new HttpParams({ fromObject: {
+    /*const params = new HttpParams({ fromObject: {
       page: 0,
       size: filters.pageSize,
       found: filters.found,
@@ -18,7 +18,24 @@ export class RefBookService {
       mylocation: filters.mylocation,
       title: filters.title,
       authors: filters.authors,
-    }});
+    }});*/
+    let params = new HttpParams()
+  .set('page', 0)
+  .set('size', filters.pageSize)
+  .set('found', filters.found);
+
+if (filters.language) {
+  params = params.set('language', filters.language);
+}
+if (filters.mylocation) {
+  params = params.set('mylocation', filters.mylocation);
+}
+if (filters.title) {
+  params = params.set('title', filters.title);
+}
+if (filters.authors) {
+  params = params.set('authors', filters.authors);
+}
     return this.http
       .get<RefPage<RefBook>>('/api/books', { params })
       .pipe(
@@ -34,4 +51,9 @@ export class RefBookService {
         ? true
         : f.pdf === 'ONLY' ? b.only_pdf : (b.with_pdf && !b.only_pdf));
   }
+
+  updateBook(book: RefBook) {
+  return this.http.put<void>(`/api/books/${book.isbn}`, book);
+}
+
 }

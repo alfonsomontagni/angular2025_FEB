@@ -1,9 +1,10 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RefBook } from '../../models/ref-book.model';
+import { RefPdfBadgeComponent } from '../ref-pdf-badge.component';
 @Component({
   selector: 'app-ref-book-card',
-  imports: [CommonModule],
+  imports: [CommonModule,RefPdfBadgeComponent],
   templateUrl: './ref-book-card.component.html',
   styleUrl: './ref-book-card.component.css'
 })
