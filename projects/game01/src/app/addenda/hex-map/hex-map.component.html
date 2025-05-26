@@ -1,0 +1,77 @@
+<!-- p>hex-map works!</p>
+<svg [attr.viewBox]="'0 0 ' + width + ' ' + height"
+     preserveAspectRatio="xMidYMid meet"
+     class="w-full h-auto select-none" -->
+<div class="page-wrapper">
+  <div class="map-tools">
+    <button (click)="zoomOut()">−</button>
+    <button (click)="zoomIn()">＋</button>
+  </div>
+
+     <div class="map-container">
+  <svg [attr.viewBox]="'0 0 ' + width + ' ' + height"
+       preserveAspectRatio="xMidYMid meet"
+       class="map-svg">
+  <!-- Esagoni + testo -->
+  <ng-container *ngFor="let h of hexes">
+    <!-- esagono -->
+    <polygon [attr.points]="hexPoints(h.x, h.y)"
+             fill="white"
+             stroke="#666"
+             stroke-width="1" />
+
+    <!-- coordinate (sempre visibili) -->
+    <text [attr.x]="h.x"
+          [attr.y]="h.y + 3"
+          text-anchor="middle"
+          font-size="6"
+          font-family="monospace">
+      {{ h.coord }}
+    </text>
+
+    <!-- simboli -->
+    <!-- punto nero -->
+    <circle *ngIf="isDot(h.coord)"
+            [attr.cx]="h.x"
+            [attr.cy]="h.y + 8"
+            r="3"
+            fill="black" />
+
+    <!-- stella con nome -->
+    <ng-container *ngIf="isStar(h.coord)">
+      <!-- piccolo esagono vuoto  
+      <polygon [attr.points]="hexPoints(h.x, h.y + 6)"
+               fill="none"
+               stroke="black"
+               stroke-width="1.5"
+               transform="scale(0.5) translate({{h.x}},{{h.y+6}})"/>
+               <polygon
+  [attr.transform]="'scale(0.5) translate(' + h.x + ',' + (h.y + 6) + ')'"
+  [attr.points]="hexPoints(h.x, h.y + 6)"
+  fill="none"
+  stroke="black"
+  stroke-width="1.5"
+/ -->
+<polygon
+  [attr.points]="hexPoints(h.x, h.y + 6)"
+  fill="none"
+  stroke="black"
+  stroke-width="1.5"
+  [attr.transform]="'scale(0.5) translate(' + h.x + ',' + (h.y + 6) + ')'"
+/>
+
+
+      <!-- nome in grassetto -->
+      <text [attr.x]="h.x"
+            [attr.y]="h.y - 5"
+            text-anchor="middle"
+            font-size="8"
+            font-weight="bold"
+            font-family="sans-serif">
+        {{ starName(h.coord) }}
+      </text>
+    </ng-container>
+  </ng-container>
+</svg>
+</div>
+</div>

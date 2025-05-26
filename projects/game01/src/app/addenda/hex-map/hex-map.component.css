@@ -1,0 +1,44 @@
+.map-container {
+  width: 100%;
+  max-width: 800px;      /* puoi regolarlo */
+  height: 600px;         /* oppure 500px, 400px ecc */
+  overflow: auto;
+  border: 1px solid #ccc;
+}
+
+.map-svg {
+  width: auto;
+  height: auto;
+}
+.page-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem;
+}
+
+.map-tools {
+  margin-bottom: 0.5rem;
+}
+
+.map-tools button {
+  margin: 0 0.25rem;
+  padding: 0.4rem 0.8rem;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
+.map-container {
+  width: 100%;
+  max-width: 900px;
+  height: 600px;
+  overflow: auto;
+  border: 1px solid #ccc;
+  background: #fdfdfd;
+}
+
+.map-svg {
+  width: auto;
+  height: auto;
+  transition: transform 0.2s ease-in-out;
+}
