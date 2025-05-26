@@ -3,12 +3,17 @@ import { CommonModule } from '@angular/common';
 import { Store } from '@ngrx/store';
 import * as Counter from './counter.actions';
 import * as Sel from './counter.selectors';
+import { HexDistanceComponent } from '../../addenda/hex-distance/hex-distance.component';
 
 @Component({
   selector: 'app-counter',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule,HexDistanceComponent],
   template: `
+  <br>
+  <div>
+    <app-hex-distance></app-hex-distance>
+  </div>
     <div class="mx-auto mt-10 max-w-sm rounded-2xl border p-6 shadow">
       <h1 class="mb-4 text-center text-3xl font-semibold">
         Contatore: <span class="text-emerald-600">{{ count$ | async }}</span>

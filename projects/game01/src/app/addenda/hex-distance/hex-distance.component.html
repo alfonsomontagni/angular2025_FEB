@@ -1,0 +1,30 @@
+<div class="p-4">
+  <h2 class="text-xl font-bold mb-2">Calcola distanze esagonali</h2>
+
+  <label class="mr-2">Coord. origine (CCRR):</label>
+  <input [(ngModel)]="coordinate"
+         placeholder="2609"
+         class="border px-2 py-1 w-24" />
+
+  <button (click)="calcDistances()"
+          class="ml-2 bg-blue-600 text-white px-3 py-1 rounded">
+    Calcola
+  </button>
+
+  <div *ngIf="results.length" class="mt-4">
+    <table class="min-w-full border text-sm">
+      <thead class="bg-gray-200">
+        <tr><th>Colonna</th><th>Riga</th><th>Coord.</th><th>Label</th><th>Distanza</th></tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let h of results">
+          <td class="border px-1">{{ h.coord.slice(0,2) }}</td>
+          <td class="border px-1">{{ h.coord.slice(2) }}</td>
+          <td class="border px-1 font-mono">{{ h.coord }}</td>
+          <td class="border px-1">{{ h.label }}</td>
+          <td class="border px-1 text-center">{{ h.dist }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
