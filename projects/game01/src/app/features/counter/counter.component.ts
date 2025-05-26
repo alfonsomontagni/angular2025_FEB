@@ -4,14 +4,19 @@ import { Store } from '@ngrx/store';
 import * as Counter from './counter.actions';
 import * as Sel from './counter.selectors';
 import { HexDistanceComponent } from '../../addenda/hex-distance/hex-distance.component';
+import { HexMapComponent } from '../../addenda/hex-map/hex-map.component';
 
 @Component({
   selector: 'app-counter',
   standalone: true,
-  imports: [CommonModule,HexDistanceComponent],
+  imports: [CommonModule,HexDistanceComponent,HexMapComponent],
   template: `
+
+  <div class="m-4">
+    <app-hex-map></app-hex-map>
+  </div>
   <br>
-  <div>
+  <div class="m-8">
     <app-hex-distance></app-hex-distance>
   </div>
     <div class="mx-auto mt-10 max-w-sm rounded-2xl border p-6 shadow">
