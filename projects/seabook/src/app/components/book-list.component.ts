@@ -27,9 +27,17 @@ import { EditBookModalComponent } from './edit-book-modal.component';
           <option [value]="100">100</option>
           <option [value]="999">Tutti</option>
         </select>
+        
         <input
           type="text"
-          placeholder="Filtra per lingua"
+          placeholder="Filtra per Categoria"
+          class="border border-gray-300 rounded-md px-3 py-2 text-sm"
+          [ngModel]="category()"
+          (ngModelChange)="category.set($event); loadBooks()"
+        />
+        <input
+          type="text"
+          placeholder="Filtra per lingua b"
           class="border border-gray-300 rounded-md px-3 py-2 text-sm"
           [ngModel]="language()"
           (ngModelChange)="language.set($event); loadBooks()"
@@ -48,6 +56,12 @@ import { EditBookModalComponent } from './edit-book-modal.component';
           [ngModel]="title()"
           (ngModelChange)="title.set($event); loadBooks()"
         />
+                <button
+  (click)="toggleTitoliAsc()"
+  class="bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-md transition-colors"
+>
+  {{ filtrotitoliordinecrescente() ? '↻Titoli Ordine originale' : 'Titoli A → Z' }}
+</button>
         <input
           type="text"
           placeholder="Filtra per autore"
@@ -55,6 +69,7 @@ import { EditBookModalComponent } from './edit-book-modal.component';
           [ngModel]="authors()"
           (ngModelChange)="authors.set($event); loadBooks()"
         />
+
         <button
           (click)="toggleFound()"
           class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition-colors"
@@ -73,14 +88,26 @@ import { EditBookModalComponent } from './edit-book-modal.component';
               : 'Tutti'
           }}
         </button>
-        <button
+        <!--button
           (click)="togglePdfFilter()"
           class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-md transition-colors">
           {{
             pdfFilter() === 'ALL' ? 'Libri e PDF' :
             pdfFilter() === 'ONLY' ? 'Solo PDF' : 'Con PDF'
           }}
-        </button>
+        </button-->
+<button
+  (click)="togglePdfFilter()"
+  class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-md transition-colors">
+
+  {{
+    pdfFilter() === 'ALL'   ? 'Libri e PDF' :      
+    pdfFilter() === 'ONLY'  ? 'Solo PDF'    :      
+    pdfFilter() === 'WITH'  ? 'Con PDF'     :   
+                             'Solo Cartaceo'        
+  }}
+
+</button>
 
         <button
           (click)="resetFilters()"
@@ -272,15 +299,20 @@ export class BookListComponent {
   isLoading = false;
   pageSize = signal(10);
   language = signal('');
+  category = signal('inform-tech');
   mylocation = signal('');
   title = signal('');
   authors = signal('');
   found = signal(true);
+filtrotitoliordinecrescente = signal(false); 
 
   constructor(private bookService: PageBookService) {
     this.loadBooks();
   }
-
+toggleTitoliAsc(): void {
+  this.filtrotitoliordinecrescente.set(!this.filtrotitoliordinecrescente());
+  this.loadBooks();          // ricarica con il nuovo ordinamento
+}
   loadBooks(): void {
     this.isLoading = true;
     this.bookService
@@ -291,7 +323,8 @@ export class BookListComponent {
         this.language(),
         this.mylocation(),
         this.title(),
-        this.authors()
+        this.authors(),
+        this.category()
       )
       .subscribe({
         next: (page) => {
@@ -303,11 +336,32 @@ export class BookListComponent {
           } else if (aggiornaFiltro === false) {
             result = result.filter((book) => !book.updatedAt);
           }
-          if (this.pdfFilter() === 'ONLY') {
+         /* if (this.pdfFilter() === 'ONLY') {
             result = result.filter(b => b.only_pdf);
           } else if (this.pdfFilter() === 'WITH') {
             result = result.filter(b => b.with_pdf && !b.only_pdf);
-          }
+          }*/
+switch (this.pdfFilter()) {
+  case 'ONLY':   // solo PDF/ebook
+    result = result.filter(b => b.only_pdf);
+    break;
+
+  case 'WITH':   // cartaceo + PDF
+    result = result.filter(b => b.with_pdf && !b.only_pdf);
+    break;
+
+  case 'PRINT':  // solo cartaceo
+    result = result.filter(b => !b.only_pdf 
+    //  && !b.with_pdf
+    );
+    break;
+
+  // 'ALL' ⇒ nessun filtro
+}
+
+          if (this.filtrotitoliordinecrescente()) {
+  result = [...result].sort((a, b) => a.title.localeCompare(b.title));
+}
           this.books = result;
           this.isLoading = false;
         },
@@ -320,6 +374,7 @@ export class BookListComponent {
   }
   resetFilters(): void {
     this.language.set('');
+    this.category.set('inform-tech');
     this.mylocation.set('');
     this.title.set('');
     this.authors.set('');
@@ -409,7 +464,7 @@ downloadIsbnWithTitles(): void {
         (book) =>
           `${book.isbn}, ${book.title || 'Libro non trovato'}, ${
             book.mylocation
-          }`
+          },${book.only_pdf?'Solo PDF':book.with_pdf?'Cartaceo con PDF':'Cartaceo'}`
       )
       .join('\n');
 
@@ -520,14 +575,35 @@ private proxiedUrl(book: Book) {
     return `http://localhost:8080/api/covers/${book.isbn}?url=${encoded}`;
   }
 
-  pdfFilter = signal<'ALL' | 'ONLY' | 'WITH'>('ALL');
-
+  pdfFilter = signal<'ALL' | 'ONLY' | 'WITH' | 'PRINT'>('ALL');
+/*
   togglePdfFilter(): void {
   const current = this.pdfFilter();
   const next = current === 'ALL' ? 'ONLY' : current === 'ONLY' ? 'WITH' : 'ALL';
+  
   this.pdfFilter.set(next);
   this.loadBooks(); // ricarica
+}*/
+togglePdfFilter(): void {
+  const current = this.pdfFilter();
+  const next =
+    current === 'ALL'  ? 'ONLY'  :   // 1 → 2
+    current === 'ONLY' ? 'WITH'  :   // 2 → 3
+    current === 'WITH' ? 'PRINT' :   // 3 → 4
+                         'ALL';      // 4 → 1
+
+  this.pdfFilter.set(next);
+  this.loadBooks(); // ricarica la lista con il nuovo filtro
 }
+/*avanzata
+togglePdfFilter(): void {
+  const states = ['ALL', 'ONLY', 'WITH', 'PRINT'] as const;
+  const idx = states.indexOf(this.pdfFilter());
+  this.pdfFilter.set(states[(idx + 1) % states.length]);
+  this.loadBooks();
+}
+
+*/
 
   deleteBook(isbn: string): void {
     // TODO: chiamata al BE per eliminazione libro se prevista
