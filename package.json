@@ -15,7 +15,8 @@
     "serve:mockseabook": "json-server --watch mock-seabook/db.json --port 3000",
     "books": "ng serve --open --project=seabook --proxy-config proxy.conf.json --no-hmr",
     "game01": "ng serve --open --project=game01 --proxy-config proxy.confgame01.json --no-hmr",
-    "build:seabook": "ng build seabook --configuration production"
+    "build:seabook": "ng build seabook --configuration production",
+    "lint": "ng lint"
   },
   "private": true,
   "dependencies": {
@@ -47,10 +48,12 @@
     "@angular/cli": "19.2.13",
     "@angular/compiler-cli": "19.2.13",
     "@types/jasmine": "~5.1.0",
+    "angular-eslint": "19.8.1",
     "autoprefixer": "^10.4.20",
     "concurrently": "^9.1.2",
     "daisyui": "^4.12.23",
     "electron": "^34.1.1",
+    "eslint": "^9.28.0",
     "jasmine-core": "~5.5.0",
     "json-server": "^1.0.0-beta.3",
     "karma": "~6.4.0",
@@ -60,6 +63,7 @@
     "karma-jasmine-html-reporter": "~2.1.0",
     "postcss": "^8.4.49",
     "tailwindcss": "^3.4.17",
-    "typescript": "~5.7.2"
+    "typescript": "~5.7.2",
+    "typescript-eslint": "8.33.1"
   }
 }

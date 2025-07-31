@@ -445,6 +445,16 @@
             ],
             "scripts": []
           }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "projects/seabook/**/*.ts",
+              "projects/seabook/**/*.html"
+            ],
+            "eslintConfig": "projects/seabook/eslint.config.js"
+          }
         }
       }
     },
@@ -622,6 +632,16 @@
               "projects/uthark/src/styles.css"
             ],
             "scripts": []
+          }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "projects/uthark/**/*.ts",
+              "projects/uthark/**/*.html"
+            ],
+            "eslintConfig": "projects/uthark/eslint.config.js"
           }
         }
       }
