@@ -12,14 +12,14 @@ export class PageBookService {
 
     
   getBooks(
-    page: number = 0,
-    size: number = 10,
-    found: boolean = true,
+    page = 0,
+    size = 10,
+    found = true,
     language?: string,
     mylocation?: string,
     title?: string,
     authors?: string,
-    categories:  string = 'inform-tech'   // default
+    categories = 'inform-tech'   // default
     
 
   ): Observable<BookPage> {

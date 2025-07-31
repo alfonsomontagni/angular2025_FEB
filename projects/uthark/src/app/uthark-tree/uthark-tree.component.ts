@@ -12,7 +12,7 @@ export class UtharkTreeComponent {
  /**
    * Griglia 3×7 (0 = vuoto, C = cerchio)
    */
-  readonly grid: ReadonlyArray<ReadonlyArray<'0' | 'C'>> = [
+  readonly grid: readonly (readonly ('0' | 'C')[])[] = [
     ['0', 'C', '0'],
     ['0', '0', '0'],
     ['0', 'C', '0'],

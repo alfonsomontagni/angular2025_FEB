@@ -25,7 +25,7 @@ import { CommonModule } from '@angular/common';
 })
 export class RefPdfBadgeComponent {
   /** true se il libro è SOLO in PDF */
-  @Input({ alias: 'only' }) only = false;
+  @Input() only = false;
   /** true se il libro ha ANCHE un PDF (ma non è solo PDF) */
-  @Input({ alias: 'with' }) with = false;
+  @Input() with = false;
 }

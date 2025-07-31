@@ -3,20 +3,20 @@ import { CommonModule, NgFor, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RUNIC_SETS } from './uthark-model';
 
-type RuneNode = {
+interface RuneNode {
   id: number;
   x: number;
   y: number;
   r: number;
   rune: string;
   testo?: string;
-};
+}
 
-type Edge = {
+interface Edge {
   from: number; // id del nodo sorgente
   to: number;   // id del nodo destinazione
   ru?: string
-};
+}
 
 @Component({
   selector: 'app-albero-uthark',

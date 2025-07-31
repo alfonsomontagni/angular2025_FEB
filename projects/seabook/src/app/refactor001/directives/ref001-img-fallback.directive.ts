@@ -5,7 +5,7 @@ import { Directive, ElementRef, HostListener, Input } from '@angular/core';
   standalone: true
 })
 export class Ref001ImgFallbackDirective {
-  @Input() appRef001ImgFallback: string = 'assets/placeholder-cover.svg';
+  @Input() appRef001ImgFallback = 'assets/placeholder-cover.svg';
   @Input() fallbackUrl?: string;
 
   constructor(private el: ElementRef<HTMLImageElement>) {}

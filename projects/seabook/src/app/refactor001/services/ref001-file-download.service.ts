@@ -50,7 +50,7 @@ export class Ref001FileDownloadService {
     URL.revokeObjectURL(url);
   }
 
-  generateFileName(prefix: string, suffix: string = '', extension: string = 'txt'): string {
+  generateFileName(prefix: string, suffix = '', extension = 'txt'): string {
     const cleanPrefix = prefix.trim() || 'Lista';
     const timestamp = this.createTimestamp();
     const cleanSuffix = suffix ? `_${suffix}` : '';

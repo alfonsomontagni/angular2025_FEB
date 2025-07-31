@@ -56,7 +56,7 @@ import { Book } from '../../../models/book.model';
 })
 export class SearchResultComponent {
   @Input() book!: Book;
-  @Input() expandDescription: boolean = false;
+  @Input() expandDescription = false;
   private _localExpand = false;
 
   toggle() {
