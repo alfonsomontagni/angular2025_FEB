@@ -14,11 +14,13 @@ export class UtharkTreeComponent {
    */
   readonly grid: ReadonlyArray<ReadonlyArray<'0' | 'C'>> = [
     ['0', 'C', '0'],
+    ['0', '0', '0'],
     ['0', 'C', '0'],
     ['C', '0', 'C'],
     ['0', 'C', '0'],
     ['C', '0', 'C'],
     ['0', 'C', '0'],
+    ['0', '0', '0'],
     ['0', 'C', '0'],
   ];
 }

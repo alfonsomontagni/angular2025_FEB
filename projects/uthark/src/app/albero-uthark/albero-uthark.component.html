@@ -1,0 +1,151 @@
+<!-- Wrapper principale -->
+<div class="flex flex-col md:flex-row gap-6 bg-white p-6 rounded-xl shadow-xl">
+
+  <!-- SVG -->
+  <div class="flex-1 flex justify-center">
+    <svg
+      class="block mx-auto w-full max-w-[500px] h-auto"
+      [attr.viewBox]="viewBox()"
+      preserveAspectRatio="xMidYMid meet"
+    >
+      <!-- Stili base (alternativa a style.css su <svg>) -->
+      <defs>
+        <style>
+          .edge { stroke:#000; stroke-width:4px; stroke-linecap:round; }
+          .node { fill:#fff;  stroke:#000; stroke-width:4px; }
+          .rune { font-family:'Noto Sans Runic', serif; font-size:34px; dominant-baseline:middle; text-anchor:middle; }
+        </style>
+      </defs>
+
+      <g>
+        <!-- edges -->
+        <ng-container *ngFor="let e of drawableEdges(); trackBy: trackByEdge">
+            <g>
+    <line  class="edge"
+           [attr.x1]="e.x1" [attr.y1]="e.y1"
+           [attr.x2]="e.x2" [attr.y2]="e.y2"
+           (mouseenter)="showTooltip($event, e.ru || '')"
+              (mousemove)="moveTooltip($event)"
+              (mouseleave)="hideTooltip()"
+           ></line>
+    <!-- tooltip: appare solo se e.ru ha un valore
+    <title *ngIf="e.ru">{{ e.ru }}</title> -->
+    
+  </g>
+        </ng-container>
+
+        <!-- nodes + rune -->
+        <ng-container *ngFor="let n of nodes() ; trackBy: trackByNode">
+           <g  (mouseenter)="showTooltip($event, n.testo || '')"
+      (mousemove)="moveTooltip($event)"
+      (mouseleave)="hideTooltip()">
+          <circle class="node" [attr.cx]="n.x" [attr.cy]="n.y" [attr.r]="n.r"></circle>
+          <text class="rune" [attr.x]="n.x" [attr.y]="n.y">{{ n.rune }}</text>
+          </g>
+        </ng-container>
+      </g>
+    </svg>
+  </div>
+
+  <!-- Pannello di editing -->
+  <div class="w-full md:w-80">
+    <h2 class="text-lg font-semibold mb-2">Editor nodi</h2>
+    <button
+      class="mb-4 px-3 py-1 text-sm rounded bg-blue-600 text-white hover:bg-blue-700"
+      (click)="addNode()">
+      + Aggiungi nodo
+    </button>
+
+    <div class="space-y-3 max-h-[60vh] overflow-auto pr-2">
+      <div
+        *ngFor="let n of nodes(); trackBy: trackByNode"
+        class="border rounded p-2 relative"
+      >
+        <button
+          class="absolute top-1 right-1 text-xs px-2 py-0.5 rounded bg-red-600 text-white"
+          (click)="removeNode(n.id)">
+          x
+        </button>
+        <div class="text-sm font-semibold mb-1">Nodo {{ n.id }}</div>
+        <label class="text-xs block mb-1">Rune:
+          <input class="w-full border rounded px-2 py-1 text-sm"
+                 [value]="n.rune"
+                 (input)="updateNode(n.id, { rune: $any($event.target).value })" />
+        </label>
+        <label class="text-xs block mb-1">X:
+          <input type="number"
+                 class="w-full border rounded px-2 py-1 text-sm"
+                 [value]="n.x"
+                 (input)="updateNode(n.id, { x: toNumber($any($event.target).value) })" />
+        </label>
+        <label class="text-xs block mb-1">Y:
+          <input type="number"
+                 class="w-full border rounded px-2 py-1 text-sm"
+                 [value]="n.y"
+                 (input)="updateNode(n.id, { y: toNumber($any($event.target).value) })" />
+        </label>
+        <label class="text-xs block mb-1">Raggio:
+          <input type="number"
+                 class="w-full border rounded px-2 py-1 text-sm"
+                 [value]="n.r"
+                 (input)="updateNode(n.id, { r: toNumber($any($event.target).value) })" />
+        </label>
+      </div>
+    </div>
+
+    <hr class="my-4">
+
+    <h2 class="text-lg font-semibold mb-2">Editor archi</h2>
+    <!-- Add edge -->
+    <div class="flex gap-2 mb-2 items-center text-sm">
+      <span>Aggiungi:</span>
+      <select #fromSel class="border rounded px-2 py-1">
+        <option *ngFor="let n of nodes();  trackBy: trackByNode" [value]="n.id">{{n.id}}</option>
+      </select>
+      <span>→</span>
+      <select #toSel class="border rounded px-2 py-1">
+        <option *ngFor="let n of nodes();  trackBy: trackByNode" [value]="n.id">{{n.id}}</option>
+      </select>
+      <button
+        class="px-2 py-1 rounded bg-green-600 text-white hover:bg-green-700"
+        (click)="addEdge(+fromSel.value, +toSel.value)"
+      >
+        +
+      </button>
+    </div>
+
+    <!-- Edge list -->
+    <div class="space-y-2 max-h-[30vh] overflow-auto pr-2">
+      <div
+        *ngFor="let e of edges(); let i = index;  trackBy: trackByEdge"
+        class="flex justify-between items-center text-sm border rounded px-2 py-1"
+      >
+        <span>{{e.from}} → {{e.to}}</span><span>{{e.ru}}</span>
+        
+        <button
+          class="text-xs px-2 py-0.5 rounded bg-red-600 text-white"
+          (click)="removeEdge(i)">
+          rimuovi
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+  <!-- Tooltip custom 
+  <div *ngIf="tooltip().show"
+       [style.left.px]="tooltip().x"
+       [style.top.px]="tooltip().y"
+       class="absolute pointer-events-none bg-green-600 text-white text-xs
+              px-2 py-1 rounded shadow-lg whitespace-nowrap z-50">
+       {{ tooltip().text }}
+  </div> -->
+  <!-- Tooltip custom (versione “x2” + bold) -->
+<div *ngIf="tooltip().show"
+     [style.left.px]="tooltip().x"
+     [style.top.px]="tooltip().y"
+     class="absolute pointer-events-none bg-green-600 text-white
+            text-lg font-bold   
+            px-4 py-2          
+            rounded shadow-lg whitespace-nowrap z-50">
+     {{ tooltip().text }}
+</div>
