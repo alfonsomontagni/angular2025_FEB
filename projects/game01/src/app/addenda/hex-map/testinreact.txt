@@ -1,0 +1,226 @@
+import React, { useRef } from 'react';
+import { Download, FileText, Grid } from 'lucide-react';
+
+const HexagonalMapGenerator = () => {
+  const canvasRef = useRef(null);
+  
+  // Specifiche geometriche
+  const SIDE_LENGTH = 4.5; // mm
+  const HORIZONTAL_SPACING = 1.5 * SIDE_LENGTH; // 6.75 mm
+  const VERTICAL_SPACING = Math.sqrt(3) * SIDE_LENGTH; // ~7.794 mm
+  const TOTAL_COLUMNS = 51;
+  const ODD_ROWS = 35;
+  const EVEN_ROWS = 34;
+  const PAGE_MARGIN = 8; // mm
+  const FONT_SIZE = 5; // pt
+  const TEXT_OFFSET = 0.25 * SIDE_LENGTH; // offset verso l'alto
+  
+  // Conversione mm to pixels (assumendo 96 DPI)
+  const MM_TO_PX = 3.7795275591;
+  
+  // Dimensioni A4 in mm
+  const A4_WIDTH = 210;
+  const A4_HEIGHT = 297;
+  
+  const sidePx = SIDE_LENGTH * MM_TO_PX;
+  const horizontalSpacingPx = HORIZONTAL_SPACING * MM_TO_PX;
+  const verticalSpacingPx = VERTICAL_SPACING * MM_TO_PX;
+  const marginPx = PAGE_MARGIN * MM_TO_PX;
+  
+  // Funzione per disegnare un esagono flat-top
+  const drawHexagon = (ctx, x, y, sideLength) => {
+    const height = Math.sqrt(3) * sideLength;
+    const width = 2 * sideLength;
+    
+    ctx.beginPath();
+    ctx.moveTo(x - width/2, y);
+    ctx.lineTo(x - sideLength/2, y - height/2);
+    ctx.lineTo(x + sideLength/2, y - height/2);
+    ctx.lineTo(x + width/2, y);
+    ctx.lineTo(x + sideLength/2, y + height/2);
+    ctx.lineTo(x - sideLength/2, y + height/2);
+    ctx.closePath();
+    ctx.stroke();
+  };
+  
+  // Funzione per disegnare il testo centrato con offset
+  const drawText = (ctx, text, x, y, offsetY) => {
+    ctx.fillStyle = 'black';
+    ctx.font = `${FONT_SIZE * MM_TO_PX * 0.75}px Helvetica, Arial, sans-serif`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(text, x, y - offsetY);
+  };
+  
+  // Funzione per generare una sezione della mappa
+  const generateMapSection = (startCol, endCol, canvasWidth, canvasHeight) => {
+    const canvas = document.createElement('canvas');
+    canvas.width = canvasWidth;
+    canvas.height = canvasHeight;
+    const ctx = canvas.getContext('2d');
+    
+    // Sfondo bianco
+    ctx.fillStyle = 'white';
+    ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+    
+    ctx.strokeStyle = 'black';
+    ctx.lineWidth = 0.5;
+    
+    const textOffsetPx = TEXT_OFFSET * MM_TO_PX;
+    
+    for (let col = startCol; col <= endCol; col++) {
+      const isOddCol = col % 2 === 1;
+      const maxRows = isOddCol ? ODD_ROWS : EVEN_ROWS;
+      const verticalOffset = isOddCol ? 0 : verticalSpacingPx / 2;
+      
+      for (let row = 1; row <= maxRows; row++) {
+        // Calcola posizione relativa alla sezione
+        const relativeCol = col - startCol + 1;
+        const x = marginPx + (relativeCol - 1) * horizontalSpacingPx + sidePx;
+        const y = marginPx + (row - 1) * verticalSpacingPx + verticalOffset + sidePx * Math.sqrt(3) / 2;
+        
+        // Disegna esagono
+        drawHexagon(ctx, x, y, sidePx);
+        
+        // Disegna numerazione CCRR
+        const colStr = col.toString().padStart(2, '0');
+        const rowStr = row.toString().padStart(2, '0');
+        const label = `${colStr}${rowStr}`;
+        
+        drawText(ctx, label, x, y, textOffsetPx);
+      }
+    }
+    
+    return canvas;
+  };
+  
+  // Funzione per scaricare come PDF (simulato con immagine)
+  const downloadPDF = (pdfNumber) => {
+    const startCol = pdfNumber === 1 ? 1 : 27;
+    const endCol = pdfNumber === 1 ? 26 : 51;
+    const colCount = endCol - startCol + 1;
+    
+    // Calcola dimensioni canvas in pixel
+    const canvasWidth = (A4_WIDTH - 2 * PAGE_MARGIN) * MM_TO_PX;
+    const canvasHeight = (A4_HEIGHT - 2 * PAGE_MARGIN) * MM_TO_PX;
+    
+    const canvas = generateMapSection(startCol, endCol, canvasWidth, canvasHeight);
+    
+    // Converti in blob e scarica
+    canvas.toBlob((blob) => {
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `mappa-esagonale-${pdfNumber === 1 ? 'colonne-01-26' : 'colonne-27-51'}.png`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    });
+  };
+  
+  // Funzione per visualizzare anteprima
+  const showPreview = () => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    
+    // Anteprima del primo PDF con scala ridotta
+    const previewScale = 0.3;
+    canvas.width = (A4_WIDTH - 2 * PAGE_MARGIN) * MM_TO_PX * previewScale;
+    canvas.height = (A4_HEIGHT - 2 * PAGE_MARGIN) * MM_TO_PX * previewScale;
+    
+    const ctx = canvas.getContext('2d');
+    ctx.scale(previewScale, previewScale);
+    
+    // Genera anteprima delle prime 10 colonne per performance
+    const previewCanvas = generateMapSection(1, 10, canvas.width / previewScale, canvas.height / previewScale);
+    ctx.drawImage(previewCanvas, 0, 0);
+  };
+  
+  React.useEffect(() => {
+    showPreview();
+  }, []);
+  
+  return (
+    <div className="min-h-screen bg-gray-50 p-6">
+      <div className="max-w-4xl mx-auto">
+        <div className="bg-white rounded-lg shadow-lg p-6">
+          <div className="flex items-center gap-3 mb-6">
+            <Grid className="w-8 h-8 text-blue-600" />
+            <h1 className="text-3xl font-bold text-gray-900">
+              Generatore Mappa Esagonale
+            </h1>
+          </div>
+          
+          <div className="grid md:grid-cols-2 gap-6">
+            <div className="space-y-4">
+              <h2 className="text-xl font-semibold text-gray-800 flex items-center gap-2">
+                <FileText className="w-5 h-5" />
+                Specifiche Tecniche
+              </h2>
+              
+              <div className="bg-gray-50 p-4 rounded-lg space-y-2 text-sm">
+                <div><strong>Tipo:</strong> Esagoni flat-top</div>
+                <div><strong>Lato:</strong> 4,5 mm</div>
+                <div><strong>Spaziatura H:</strong> 6,75 mm</div>
+                <div><strong>Spaziatura V:</strong> ~7,794 mm</div>
+                <div><strong>Colonne:</strong> 51 (01-51)</div>
+                <div><strong>Righe dispari:</strong> 35</div>
+                <div><strong>Righe pari:</strong> 34 (offset +½)</div>
+                <div><strong>Font:</strong> Helvetica 5pt</div>
+                <div><strong>Margini:</strong> 8 mm</div>
+              </div>
+              
+              <div className="flex flex-col gap-3">
+                <button
+                  onClick={() => downloadPDF(1)}
+                  className="flex items-center justify-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors"
+                >
+                  <Download className="w-5 h-5" />
+                  Scarica PDF 1 (Colonne 01-26)
+                </button>
+                
+                <button
+                  onClick={() => downloadPDF(2)}
+                  className="flex items-center justify-center gap-2 bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors"
+                >
+                  <Download className="w-5 h-5" />
+                  Scarica PDF 2 (Colonne 27-51)
+                </button>
+              </div>
+              
+              <div className="bg-yellow-50 border border-yellow-200 p-3 rounded-lg">
+                <p className="text-sm text-yellow-800">
+                  <strong>Nota:</strong> I file vengono scaricati in formato PNG ad alta risoluzione. 
+                  Per ottenere PDF veri, è necessario stampare o convertire le immagini.
+                </p>
+              </div>
+            </div>
+            
+            <div className="space-y-4">
+              <h2 className="text-xl font-semibold text-gray-800">
+                Anteprima (Prime 10 colonne)
+              </h2>
+              
+              <div className="border border-gray-300 rounded-lg p-4 bg-white">
+                <canvas
+                  ref={canvasRef}
+                  className="max-w-full h-auto border border-gray-200 rounded"
+                  style={{ imageRendering: 'crisp-edges' }}
+                />
+              </div>
+              
+              <div className="text-sm text-gray-600 space-y-1">
+                <p><strong>Numerazione:</strong> CCRR (Colonna + Riga)</p>
+                <p><strong>Esempio:</strong> 0135 = Colonna 01, Riga 35</p>
+                <p><strong>Crescita:</strong> Dall'alto verso il basso</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default HexagonalMapGenerator;

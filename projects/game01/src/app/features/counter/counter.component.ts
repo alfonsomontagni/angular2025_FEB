@@ -5,13 +5,17 @@ import * as Counter from './counter.actions';
 import * as Sel from './counter.selectors';
 import { HexDistanceComponent } from '../../addenda/hex-distance/hex-distance.component';
 import { HexMapComponent } from '../../addenda/hex-map/hex-map.component';
+import { HexagonalCl4MapComponent } from '../../addenda/hexagonal-cl4-map/hexagonal-cl4-map.component';
 
 @Component({
   selector: 'app-counter',
   standalone: true,
-  imports: [CommonModule,HexDistanceComponent,HexMapComponent],
+  imports: [CommonModule,HexDistanceComponent,HexMapComponent,HexagonalCl4MapComponent],
   template: `
-
+<div class="m-4">
+  <p>qcla4</p>
+  <app-cl4-hexagonal-map></app-cl4-hexagonal-map>
+</div>
   <div class="m-4">
     <app-hex-map></app-hex-map>
   </div>

@@ -58,7 +58,7 @@ export class SearchIsbnComponent {
   }
   successMessage = signal<string | null>(null);
   fileNamePrefix = signal('Lista');
-
+  categoria=signal('cat_varie');
   saveIsbnList(): void {
     //this.successMessage.set('File listaISBN.txt pronto per il download.');
     //setTimeout(() => this.successMessage.set(null), 3000);
@@ -182,17 +182,25 @@ locationsAZ = [
     this.errorMessage.set('Seleziona una posizione valida');
     return;
   }
+  const categ = this.categoria().trim()
+const booksToSave = this.books()
+  .filter(book => book.isbn && book.isbn.trim() !== '')
+  .map(book => {
+    const originalCategories = Array.isArray(book.categories)
+      ? book.categories
+      : typeof book.categories === 'string' && book.categories.trim() !== ''
+        ? [book.categories.trim()]
+        : [];
 
-  const booksToSave = this.books()
-    .filter(book => book.isbn && book.isbn.trim() !== '')
-    .map(book => ({
+    return {
       ...book,
       authors: Array.isArray(book.authors) ? book.authors.join(', ') : book.authors,
-      categories: Array.isArray(book.categories) ? book.categories.join(', ') : book.categories,
+      categories: [categ, ...originalCategories].join(', '), // aggiunge la categoria all'inizio
       mylocation: this.selectedLocation(),
       only_pdf: flag,
       with_pdf: false 
-    }));
+    };
+  });
 
   this.searchService.saveBooksToDb(booksToSave).subscribe({
     next: () => this.successMessage.set('Salvataggio completato con successo.'),

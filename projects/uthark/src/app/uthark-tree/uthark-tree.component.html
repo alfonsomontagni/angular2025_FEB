@@ -1,0 +1,17 @@
+<!-- Template: uthark-tree.component.html -->
+<div class="bg-black p-4 flex justify-center">
+  <div class="grid grid-cols-3 gap-3">
+    <!-- Itera righe -->
+    <ng-container *ngFor="let row of grid">
+      <!-- Itera celle -->
+      <ng-container *ngFor="let cell of row">
+        <div class="w-20 h-20"
+             [class.rounded-full]="cell === 'C'"
+             [class.bg-red-600]="cell === 'C'"
+             [class.shadow-lg]="cell === 'C'"
+             [class.shadow-red-600]="cell === 'C'" >
+        </div>
+      </ng-container>
+    </ng-container>
+  </div>
+</div>

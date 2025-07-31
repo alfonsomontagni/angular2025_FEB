@@ -397,8 +397,8 @@
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "4kB",
-                  "maximumError": "8kB"
+                  "maximumWarning": "14kB",
+                  "maximumError": "38kB"
                 }
               ],
               "outputHashing": "all"
@@ -531,6 +531,95 @@
             ],
             "styles": [
               "projects/game01/src/styles.css"
+            ],
+            "scripts": []
+          }
+        }
+      }
+    },
+    "uthark": {
+      "projectType": "application",
+      "schematics": {},
+      "root": "projects/uthark",
+      "sourceRoot": "projects/uthark/src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:application",
+          "options": {
+            "outputPath": "dist/uthark",
+            "index": "projects/uthark/src/index.html",
+            "browser": "projects/uthark/src/main.ts",
+            "polyfills": [
+              "zone.js"
+            ],
+            "tsConfig": "projects/uthark/tsconfig.app.json",
+            "assets": [
+              {
+                "glob": "**/*",
+                "input": "projects/uthark/public"
+              }
+            ],
+            "styles": [
+              "projects/uthark/src/styles.css"
+            ],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "500kB",
+                  "maximumError": "1MB"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "4kB",
+                  "maximumError": "8kB"
+                }
+              ],
+              "outputHashing": "all"
+            },
+            "development": {
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "configurations": {
+            "production": {
+              "buildTarget": "uthark:build:production"
+            },
+            "development": {
+              "buildTarget": "uthark:build:development"
+            }
+          },
+          "defaultConfiguration": "development"
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n"
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "polyfills": [
+              "zone.js",
+              "zone.js/testing"
+            ],
+            "tsConfig": "projects/uthark/tsconfig.spec.json",
+            "assets": [
+              {
+                "glob": "**/*",
+                "input": "projects/uthark/public"
+              }
+            ],
+            "styles": [
+              "projects/uthark/src/styles.css"
             ],
             "scripts": []
           }

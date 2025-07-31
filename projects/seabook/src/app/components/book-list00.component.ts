@@ -27,7 +27,7 @@ import { EditBookModalComponent } from './edit-book-modal.component';
         </select>
         <input
           type="text"
-          placeholder="Filtra per lingua"
+          placeholder="Filtra per lingua 00"
           class="border border-gray-300 rounded-md px-3 py-2 text-sm"
           [ngModel]="language()"
            (ngModelChange)="language.set($event); loadBooks()" />

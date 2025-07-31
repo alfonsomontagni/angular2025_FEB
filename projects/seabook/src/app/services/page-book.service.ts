@@ -18,12 +18,16 @@ export class PageBookService {
     language?: string,
     mylocation?: string,
     title?: string,
-    authors?: string
+    authors?: string,
+    categories:  string = 'inform-tech'   // default
+    
+
   ): Observable<BookPage> {
     let params = new HttpParams()
       .set('page', page)
       .set('size', size)
-      .set('found', found);
+      .set('found', found)
+      .set('categories',  categories);   
 
     if (language) {
       params = params.set('language', language);
